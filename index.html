@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<style>
+.puzzleContainer {
+  display: grid;
+  gap: 0.3vh;
+  grid-template: repeat(4, 1fr) / repeat(4, 1fr);
+  width: 40vh;
+  height: 40vh;
+  margin: 0;
+  background-color: grey;
+  border-radius: 0.8vh;
+  border: 0.3vh solid grey;
+  position: relative;
+}
+
+.tiles {
+  background-color: red;
+  border-radius: 0.8vh;
+  cursor: pointer;
+  width: 9.7vh;
+  height: 9.7vh;
+}
+
+#tile1header {
+	position: absolute;
+	grid-column: 2;
+    grid-row: 1;
+}
+
+
+#mydiv {
+  position: absolute;
+  z-index: 9;
+  background-color: #f1f1f1;
+  text-align: center;
+  border: 1px solid #d3d3d3;
+}
+
+#mydivheader {
+  padding: 10px;
+  cursor: move;
+  z-index: 10;
+  background-color: #2196F3;
+  color: #fff;
+}
+</style>
+<body>
+
+<h1>Draggable DIV Element</h1>
+
+<p>Click and hold the mouse button down while moving the DIV element</p>
+
+
+
+<div id="container" class="puzzleContainer">
+	<div id="tile1header" class="tiles"><p id="screen-log"></p></div>
+    <div class="tiles"></div>
+<div>
+
+<script>
+//bron van hetscript: https://www.w3schools.com/howto/tryit.asp?filename=tryhow_js_draggable
+// info voor dragabble voor toutch: https://www.horuskol.net/blog/2020-08-15/drag-and-drop-elements-on-touch-devices/
+
+//Make the DIV element draggagle:
+dragElement(document.getElementById("tile1header"));
+
+function dragElement(elmnt) {
+  var pos1 = 0, pos2 = 0, pos3 = 0, pos4 = 0;
+  if (document.getElementById(elmnt.id + "header")) {
+    /* if present, the header is where you move the DIV from:*/
+    document.getElementById(elmnt.id + "header").onmousedown = dragMouseDown;
+    
+  } else {
+    /* otherwise, move the DIV from anywhere inside the DIV:*/
+    elmnt.onmousedown = dragMouseDown;
+  }
+
+  function dragMouseDown(e) {
+    e = e || window.event;
+    e.preventDefault();
+    // get the mouse cursor position at startup:
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+     document.onmouseup = closeDragElement;
+    // call a function whenever the cursor moves:
+    document.onmousemove = elementDrag;
+  }
+
+//screenlog
+let screenLog = document.querySelector("#screen-log");
+document.addEventListener("mousemove", logKey);
+const container = document.getElementById("tile1header");
+const startLeft = container.offsetLeft;
+const startTop = container.offsetTop;
+
+function logKey(e) {
+    
+  screenLog.innerText = `
+    Screen X/Y: ${container.offsetLeft}, ${container.offsetTop + "px"}
+    Client X/Y: ${e.clientX}, ${e.clientY}`;
+}
+
+//element drag behavior
+
+  function elementDrag(e) {
+    e = e || window.event;
+    e.preventDefault();
+    // calculate the new cursor position:
+    
+    const contTop = container.offsetTop;
+    const contLeft = container.offsetLeft;
+    posY = elmnt.offsetTop;
+    posX = elmnt.offsetLeft;
+    pos1 = pos3 - e.clientX;
+    pos2 = pos4 - e.clientY;
+    pos3 = e.clientX;
+    pos4 = e.clientY;
+    // set the element's new position:
+    elmnt.style.top = (container.offsetTop  - pos2 - startTop) + "px";
+    //65 is de start offsetLeft
+    elmnt.style.left = (container.offsetLeft - pos1 - startLeft) + "px";
+        
+  }
+
+  function closeDragElement() {
+    /* stop moving when mouse button is released:*/
+    document.onmouseup = null;
+    document.onmousemove = null;
+  }
+}
+</script>
+
+</body>
+</html>
